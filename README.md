@@ -1,4 +1,4 @@
-# person-uuid - UUID encoding of Swedish identity numbers.
+# UUID encoding of Swedish identity numbers.
 
 An encoding of Swedish identity numbers for organisations, individuals,
 etc. in a Version 1 date-time and MAC address UUID. The MAC address is fixed
@@ -35,3 +35,12 @@ version 1: date-time and MAC address / |  |  |
                                              |
            x=reserved (must be 0), t=id type /
 ```
+
+## Examples
+
+Enterprise identity number: `00556809-9963-1000-9000-d59a20d06c1a`
+
+Social security number: `19410617-7753-1000-9001-d59a20d06c1a`
+
+
+
