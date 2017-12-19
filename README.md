@@ -20,11 +20,11 @@ The type of identity is stored in the `t` field
                        00112233 4455 6677 8899 aabbccddeeff
                        -------- ---- ---- ---- ------------
                        xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
-                       iiiiiiii-iiii-1nnn-9xxt-d59a20d06c1a
+                       iiiiiiii-iiii-1nnn-9xxt-d49a20d06c1a
                        \___________/ |\_/ |  | \__________/
                              |       | |  |  |       |
-                         id number   | |  |  | fixed MAC with
-      stored as 1 digit per nybble   | |  |  | multicast bit set
+                         id number   | |  |  | fixed MAC
+      stored as 1 digit per nybble   | |  |  |
                                      | |  |  |
 version 1: date-time and MAC address / |  |  |
                                        |  |  |
@@ -38,9 +38,9 @@ version 1: date-time and MAC address / |  |  |
 
 ## Examples
 
-Enterprise identity number: `00556809-9963-1000-9000-d59a20d06c1a`
+Enterprise identity number: `00556809-9963-1000-9000-d49a20d06c1a`
 
-Social security number: `19410617-7753-1000-9001-d59a20d06c1a`
+Social security number: `19410617-7753-1000-9001-d49a20d06c1a`
 
 
 
