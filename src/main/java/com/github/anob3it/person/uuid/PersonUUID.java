@@ -27,10 +27,10 @@ import java.util.UUID;
  *                        00112233 4455 6677 8899 aabbccddeeff
  *                        -------- ---- ---- ---- ------------
  *                        xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
- *                        iiiiiiii-iiii-1nnn-9xxt-d49a20d06c1a
+ *                        iiiiiiii-iiii-1nnn-9xxx-d49a20d06c1a
  *                        \___________/ |\_/ |  | \__________/
  *                              |       | |  |  |       |
- *                          id number   | |  |  | fixed MAC with
+ *                          id number   | |  |  | fixed MAC address
  *       stored as 1 digit per nybble   | |  |  |
  *                                      | |  |  |
  * version 1: date-time and MAC address / |  |  |
@@ -40,7 +40,7 @@ import java.util.UUID;
  *    variant 1: 10x with x=0 -> 100 (hex 8) |  |
  *     lsb of N = 1, yielding N=1001 (hex 9) /  |
  *                                              |
- *            x=reserved (must be 0), t=id type /
+ *                       x=reserved (must be 0) /
  * </pre>
  */
 public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
@@ -154,23 +154,36 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
     }
 
     private static long decodeId(long msb) {
-        final long id = msb >>> 16;
+        final long nybbles = msb >>> 16;
+        final long id = decodeDecimalNybbles(nybbles, 12);
+        if (id < 0) {
+            throw new IllegalArgumentException(String.format("Invalid identity: %08x-%04x", nybbles >>> 16, nybbles & 0xffff));
+        }
+
+        return id;
+    }
+
+    private static int decodeSerial(long msb) {
+        final long serial = decodeDecimalNybbles(msb, 3);
+        if (serial < 0) {
+            throw new IllegalArgumentException(String.format("Invalid serial number: %03x", msb & 0xfff));
+        }
+
+        return (int)serial;
+    }
+
+    private static long decodeDecimalNybbles(long nybbles, int n) {
         long result = 0;
-        for (int i = 11; i >= 0; i--) {
-            int digit = (int)((id >> (i << 2)) & 15);
+        for (int i = n - 1; i >= 0; i--) {
+            int digit = (int)((nybbles >> (i << 2)) & 15);
             if (digit > 9) {
-                throw new IllegalArgumentException(String.format("Invalid identity: %08x-%04x", id >>> 4, id & 0xffff));
+                return -1;
             }
             result = result * 10 + digit;
         }
 
         return result;
     }
-
-    private static int decodeSerial(long msb) {
-        return (int)(msb & 0xfff);
-    }
-
 
     private static int luhn(int nr) {
         int sum = 0;
@@ -228,7 +241,12 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
             msb |= (tmp % 10) << (i << 2);
         }
 
-        msb = (msb << 16) | MSB_RESERVED | serial;
+        msb = (msb << 16) | MSB_RESERVED;
+        tmp = serial;
+        for (int i = 0; i < 3; i++, tmp /= 10) {
+            msb |= (tmp % 10) << (i << 2);
+        }
+
         return msb;
     }
 

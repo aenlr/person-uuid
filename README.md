@@ -12,18 +12,16 @@ in the canonical UUID hex representation.
 A serial number is stored in `time_hi` to support multiple businesses registered
 to the same individual natural person.
 
-The type of identity is stored in the `t` field
-
 ```
                         ________________   _______________
                        /                \ /               \
                        00112233 4455 6677 8899 aabbccddeeff
                        -------- ---- ---- ---- ------------
                        xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
-                       iiiiiiii-iiii-1nnn-9xxt-d49a20d06c1a
+                       iiiiiiii-iiii-1nnn-9xxx-d49a20d06c1a
                        \___________/ |\_/ |  | \__________/
                              |       | |  |  |       |
-                         id number   | |  |  | fixed MAC
+                         id number   | |  |  | fixed MAC address
       stored as 1 digit per nybble   | |  |  |
                                      | |  |  |
 version 1: date-time and MAC address / |  |  |
@@ -33,14 +31,14 @@ version 1: date-time and MAC address / |  |  |
    variant 1: 10x with x=0 -> 100 (hex 8) |  |
     lsb of N = 1, yielding N=1001 (hex 9) /  |
                                              |
-           x=reserved (must be 0), t=id type /
+                     x=reserved (must be 0)  /
 ```
 
 ## Examples
 
 Enterprise identity number: `00556809-9963-1000-9000-d49a20d06c1a`
 
-Social security number: `19410617-7753-1000-9001-d49a20d06c1a`
+Social security number: `19410617-7753-1000-9000-d49a20d06c1a`
 
 
 

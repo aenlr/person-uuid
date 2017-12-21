@@ -24,10 +24,10 @@ public class PersonUuidTest {
     public void testPersnr() {
         assertEquals("18150526-9272-1000-9000-d49a20d06c1a", PersonUUID.parse("18150526-9272").toString());
 
-        PersonUUID uuid = new PersonUUID(194106177753L, 1);
-        assertEquals("19410617-7753-1001-9000-d49a20d06c1a", uuid.toString());
+        PersonUUID uuid = new PersonUUID(194106177753L, 99);
+        assertEquals("19410617-7753-1099-9000-d49a20d06c1a", uuid.toString());
         assertEquals(194106177753L, uuid.id());
-        assertEquals(1, uuid.serial());
+        assertEquals(99, uuid.serial());
         assertEquals(PersonUUID.IdType.PERSNR, uuid.type());
     }
 
@@ -36,10 +36,10 @@ public class PersonUuidTest {
         assertEquals("19701063-2391-1000-9000-d49a20d06c1a", PersonUUID.parse("19701063-2391").toString());
         assertEquals("19701063-2391-1000-9000-d49a20d06c1a", PersonUUID.parse("197010632391").toString());
 
-        PersonUUID uuid = new PersonUUID(197010632391L, 2);
-        assertEquals("19701063-2391-1002-9000-d49a20d06c1a", uuid.toString());
+        PersonUUID uuid = new PersonUUID(197010632391L, 999);
+        assertEquals("19701063-2391-1999-9000-d49a20d06c1a", uuid.toString());
         assertEquals(197010632391L, uuid.id());
-        assertEquals(2, uuid.serial());
+        assertEquals(999, uuid.serial());
         assertEquals(PersonUUID.IdType.SAMNR, uuid.type());
     }
 
