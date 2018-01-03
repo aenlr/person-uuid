@@ -2,8 +2,8 @@
 
 An encoding of Swedish identity numbers for organisations, individuals,
 etc. in a Version 1 date-time and MAC address UUID. The MAC address is fixed
-and has the multicast bit set. In addition the least significant bit of `N`
-must be set to 1.
+and uniquely identifies this UUID as encoding a Swedish identity number.
+In addition the least significant bit of `N` must be set to 1.
 
 The identity number is stored in the `time_low` and `time_mid` fields
 encoded with 4 bits per digit to be readable as the original identity
