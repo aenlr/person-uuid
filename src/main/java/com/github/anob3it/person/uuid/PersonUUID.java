@@ -51,6 +51,10 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
         SAMNR,
         GDNR;
 
+        public static IdType classify(String id) {
+            return classify(Long.parseLong(id));
+        }
+
         public static IdType classify(long id) {
             final long year = getYear(id);
             final int month = getMonth(id);
@@ -315,14 +319,16 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
      * @throws IllegalArgumentException if {@code str} is not a valid identity number or person UUID.
      */
     public static PersonUUID parse(String str) {
-        if (str.matches("\\d{10}|\\d{12}")) {
+        if (str.length() == 36) {
+            return new PersonUUID(UUID.fromString(str));
+        } else if (str.matches("\\d{10}|\\d{12}")) {
             return new PersonUUID(Long.parseLong(str));
         } else if (str.matches("\\d{6}-\\d{4}")) {
             return new PersonUUID(Long.parseLong(str.substring(0, 6)) * 1_0000 + Long.parseLong(str.substring(7)));
         } else if (str.matches("\\d{8}-\\d{4}")) {
             return new PersonUUID(Long.parseLong(str.substring(0, 8)) * 1_0000 + Long.parseLong(str.substring(9)));
         } else {
-            return new PersonUUID(UUID.fromString(str));
+            throw new IllegalArgumentException("Identity could not be parsed: " + str);
         }
     }
 
