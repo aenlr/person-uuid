@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/anob3it/person-uuid.svg?branch=master)](https://travis-ci.org/anob3it/person-uuid)
+
 # UUID encoding of Swedish identity numbers.
 
 An encoding of Swedish identity numbers for organisations, individuals,
