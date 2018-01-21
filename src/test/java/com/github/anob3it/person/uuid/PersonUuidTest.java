@@ -12,6 +12,10 @@ public class PersonUuidTest {
     public void testOrgnr() {
         assertEquals("00556809-9963-1000-9000-d49a20d06c1a", PersonUUID.parse("556809-9963").toString());
         assertEquals("00556809-9963-1000-9000-d49a20d06c1a", PersonUUID.parse("5568099963").toString());
+        assertEquals("00556809-9963-1001-9000-d49a20d06c1a", PersonUUID.parse("556809-9963-1").toString());
+        assertEquals("00556809-9963-1002-9000-d49a20d06c1a", PersonUUID.parse("5568099963-2").toString());
+        assertEquals("16556809-9963-1003-9000-d49a20d06c1a", PersonUUID.parse("165568099963-3").toString());
+        assertEquals("16556809-9963-1004-9000-d49a20d06c1a", PersonUUID.parse("16556809-9963-4").toString());
 
         PersonUUID uuid = new PersonUUID(5568099963L);
         assertEquals("00556809-9963-1000-9000-d49a20d06c1a", uuid.toString());
@@ -23,6 +27,8 @@ public class PersonUuidTest {
     @Test
     public void testPersnr() {
         assertEquals("18150526-9272-1000-9000-d49a20d06c1a", PersonUUID.parse("18150526-9272").toString());
+        assertEquals("18150526-9272-1001-9000-d49a20d06c1a", PersonUUID.parse("18150526-9272-1").toString());
+        assertEquals("18150526-9272-1002-9000-d49a20d06c1a", PersonUUID.parse("181505269272-2").toString());
 
         PersonUUID uuid = new PersonUUID(194106177753L, 99);
         assertEquals("19410617-7753-1099-9000-d49a20d06c1a", uuid.toString());

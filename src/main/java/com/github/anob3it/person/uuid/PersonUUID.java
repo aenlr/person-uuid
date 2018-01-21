@@ -3,6 +3,8 @@ package com.github.anob3it.person.uuid;
 import java.io.Serializable;
 import java.time.chrono.IsoChronology;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * UUID encoding of Swedish identity numbers.
@@ -72,17 +74,24 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
                 return ORGNR;
             }
 
-            if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+            if (year >= 1800 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
                 return PERSNR;
             }
 
-            if (month >= 1 && month <= 12 && day >= 61 && day <= 91) {
+            if (year >= 1900 && month >= 1 && month <= 12 && day >= 61 && day <= 91) {
                 return SAMNR;
             }
 
             throw new IllegalArgumentException("Invalid identity number: " + id);
         }
     }
+
+    private static final Pattern DIGITS_10_OR_12 = Pattern.compile("\\d{10}|\\d{12}");
+    private static final Pattern DIGITS_10_OR_12_WITH_SERIAL = Pattern.compile("(\\d{10}|\\d{12})-(\\d{1,3})");
+    private static final Pattern DIGITS_6_PLUS_4 = Pattern.compile("(\\d{6})-(\\d{4})");
+    private static final Pattern DIGITS_6_PLUS_4_WITH_SERIAL = Pattern.compile("(\\d{6})-(\\d{4})-(\\d{1,3})");
+    private static final Pattern DIGITS_8_PLUS_4 = Pattern.compile("(\\d{8})-(\\d{4})");
+    private static final Pattern DIGITS_8_PLUS_4_WITH_SERIAL = Pattern.compile("(\\d{8})-(\\d{4})-(\\d{1,3})");
 
     private static final long MSB_MASK      = 0x00000000_0000_f000L;
     private static final long MSB_RESERVED  = 0x00000000_0000_1000L;
@@ -321,15 +330,40 @@ public final class PersonUUID implements Serializable, Comparable<PersonUUID> {
     public static PersonUUID parse(String str) {
         if (str.length() == 36) {
             return new PersonUUID(UUID.fromString(str));
-        } else if (str.matches("\\d{10}|\\d{12}")) {
-            return new PersonUUID(Long.parseLong(str));
-        } else if (str.matches("\\d{6}-\\d{4}")) {
-            return new PersonUUID(Long.parseLong(str.substring(0, 6)) * 1_0000 + Long.parseLong(str.substring(7)));
-        } else if (str.matches("\\d{8}-\\d{4}")) {
-            return new PersonUUID(Long.parseLong(str.substring(0, 8)) * 1_0000 + Long.parseLong(str.substring(9)));
-        } else {
-            throw new IllegalArgumentException("Identity could not be parsed: " + str);
         }
+
+        Matcher m;
+        m = DIGITS_10_OR_12.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(str));
+        }
+
+        m = DIGITS_8_PLUS_4.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(m.group(1)) * 1_0000 + Long.parseLong(m.group(2)));
+        }
+
+        m = DIGITS_6_PLUS_4.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(m.group(1)) * 1_0000 + Long.parseLong(m.group(2)));
+        }
+
+        m = DIGITS_10_OR_12_WITH_SERIAL.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(m.group(1)), Integer.parseInt(m.group(2)));
+        }
+
+        m = DIGITS_8_PLUS_4_WITH_SERIAL.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(m.group(1)) * 1_0000 + Long.parseLong(m.group(2)), Integer.parseInt(m.group(3)));
+        }
+
+        m = DIGITS_6_PLUS_4_WITH_SERIAL.matcher(str);
+        if (m.matches()) {
+            return new PersonUUID(Long.parseLong(m.group(1)) * 1_0000 + Long.parseLong(m.group(2)), Integer.parseInt(m.group(3)));
+        }
+
+        throw new IllegalArgumentException("Identity could not be parsed: " + str);
     }
 
     private static boolean isValidDate(long year, int month, int day) {
